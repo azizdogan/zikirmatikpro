@@ -1,0 +1,209 @@
+﻿Build1=Default,com.zikirmatikpro
+File1=1456767899_Circle_Green.png
+File2=2160x3840-Background-HD-Wallpaper-247-300x533.jpg
+File3=geri1.png
+File4=geri113.png
+File5=imageyesil.png
+File6=LayoutZikirmatik.bal
+File7=MetroUI-Other-Sound-icon.png
+File8=tekrar111.png
+File9=tekrarla1.png
+FileGroup1=Default Group
+FileGroup2=Default Group
+FileGroup3=Default Group
+FileGroup4=Default Group
+FileGroup5=Default Group
+FileGroup6=Default Group
+FileGroup7=Default Group
+FileGroup8=Default Group
+FileGroup9=Default Group
+Group=Default Group
+Library1=audio
+Library2=b4xpages
+Library3=core
+Library4=xui views
+Library5=xui
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="29"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~
+Module1=|relative|..\B4XMainPage
+Module2=Starter
+NumberOfFiles=9
+NumberOfLibraries=5
+NumberOfModules=2
+Version=10.7
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: ZikirmatikPro
+	#VersionCode: 1
+	#VersionName: 1.1
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: portrait
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: True
+	#IncludeTitle: False
+#End Region
+
+Sub Process_Globals
+	Public ActionBarHomeClicked As Boolean
+End Sub
+
+Sub Globals
+
+	Private xui As XUI
+	Private dialog As B4XDialog
+	Private anaButon As Button
+	Private sifirlaButonu As Button
+	Private GeriSayButonu As Button
+	Private AnaEkran As Label
+	Dim sayac As Int
+	Dim sifir As Int
+	sifir = 0
+		
+	
+	Private cikis As Button
+	Private ButonHedef As Button
+	Private LabelHedef As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	Dim pm As B4XPagesManager
+	pm.Initialize(Activity)
+	Activity.LoadLayout("LayoutZikirmatik")
+	dialog.Initialize(Activity)
+	dialog.Title = "Hedef Sayı Giriniz"
+	
+End Sub
+
+'Template version: B4A-1.01
+#Region Delegates
+
+Sub Activity_ActionBarHomeClick
+	ActionBarHomeClicked = True
+	B4XPages.Delegate.Activity_ActionBarHomeClick
+	ActionBarHomeClicked = False
+End Sub
+
+Sub Activity_KeyPress (KeyCode As Int) As Boolean
+	Return B4XPages.Delegate.Activity_KeyPress(KeyCode)
+End Sub
+
+Sub Activity_Resume
+	B4XPages.Delegate.Activity_Resume
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+	B4XPages.Delegate.Activity_Pause
+End Sub
+
+Sub Activity_PermissionResult (Permission As String, Result As Boolean)
+	B4XPages.Delegate.Activity_PermissionResult(Permission, Result)
+End Sub
+
+Sub Create_Menu (Menu As Object)
+	B4XPages.Delegate.Create_Menu(Menu)
+End Sub
+
+#if Java
+public boolean _onCreateOptionsMenu(android.view.Menu menu) {
+	 processBA.raiseEvent(null, "create_menu", menu);
+	 return true;
+	
+}
+#End If
+#End Region
+
+'Program code should go into B4XMainPage and other pages.
+
+
+
+Private Sub anaButon_Click
+	
+
+	AnaEkran.Text = sayac = 0
+	sayac = sayac + 1
+	AnaEkran.Text = sayac + 0
+	HedefSayiBelirleme
+	
+End Sub
+
+Private Sub sifirlaButonu_Click
+	If sayac <> 0 Then 
+
+		Dim sf As Object = Msgbox2Async("Sayacı sıfırlamak istediğinizden eminmisiniz?", "Sayacı Sıfırla", "Evet","", "Hayır", Null, False)
+		Wait For (sf) Msgbox_Result (Result As Int)
+		If Result = DialogResponse.POSITIVE Then
+			sayac = sifir
+			AnaEkran.Text = sayac
+		End If
+
+		
+	
+	Else
+		MsgboxAsync("Sayaç değeri şu an sıfırda", "Uyarı !")
+	End If
+	
+	
+	
+End Sub
+
+Private Sub GeriSayButonu_Click
+	
+	
+	If  0 < sayac Then
+	sayac = sayac - 1
+	AnaEkran.Text = sayac
+	Else
+		
+		AnaEkran.Text = sifir
+				
+	End If
+	
+
+
+	
+	
+End Sub
+
+
+
+Private Sub cikis_Click
+	
+	
+	Dim sf As Object = Msgbox2Async("Çıkmak istediğinizden eminmisiniz?", "Çıkış Uyarısı !", "Evet","", "Hayır", Null, False)
+	Wait For (sf) Msgbox_Result (Result As Int)
+	If Result = DialogResponse.POSITIVE Then
+		ExitApplication
+		
+	End If
+	
+	
+End Sub
+
+
+Private Sub ButonHedef_Click
+
+	Dim input As B4XInputTemplate
+	input.Initialize
+	input.lblTitle.Text = "Hedeflenen Zikir Sayısı:"
+	input.ConfigureForNumbers(True, True)
+	Wait For (dialog.ShowTemplate(input, "Tamam", "", "İptal")) Complete (Result As Int)
+	If Result = xui.DialogResponse_Positive Then
+		LabelHedef.Text = input.Text
+		
+	End If
+	
+End Sub
+
+Private Sub HedefSayiBelirleme
+
+	If LabelHedef.Text = sayac  Then
+		 
+		Dim b As Beeper
+		b.Initialize(300, 500) '300 milliseconds, 500 hz
+		b.Beep
+		
+			
+	End If
+End Sub
